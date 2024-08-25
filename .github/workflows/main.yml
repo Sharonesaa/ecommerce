@@ -15,10 +15,9 @@ jobs:
 
     - name: Login to Docker hub
       uses: docker/login-action@v3
-      
       with:
-        username: ${{secrets.DOCKERHUB_USERNAME}}
-        password: ${{secrets.DOCKERHUB_TOKEN}}
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -29,4 +28,5 @@ jobs:
         context: ./ecommerce-sharonesaa
         file: ./ecommerce-sharonesaa/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}ecommerce-sharonesaa:latests
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce-sharonesaa:latest
+
