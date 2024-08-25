@@ -2,7 +2,7 @@ import { IsUUID } from 'class-validator';
 
 export class FindOneParams {
   @IsUUID()
-  id: string;
+  id: string
 }
 
 export class FindUserParams {
