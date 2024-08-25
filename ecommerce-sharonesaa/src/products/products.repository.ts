@@ -1,61 +1,52 @@
-import { Injectable } from "@nestjs/common";
-import { ProductDto } from "src/Dto/product.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Product } from './products.entity';
 
- @Injectable()
- export class ProductsRepository{
-     
-    private products =[
-        { 
-        id: 1,
-        name: 'Teclado', 
-        description: 'Negro', 
-        price: 25000, 
-        imgUrl:'teclado.jpg', 
-        stock: true
-        },
-        { 
-        id: 2, 
-        name: 'Monitor', 
-        description: 'Blanco', 
-        price: 40000, 
-        imgUrl:'monitor.jpg', 
-        stock: true 
-        }
-    ];
-    
-    async getProducts(){
-        return this.products;
+@Injectable()
+export class ProductsRepository {
+  constructor(
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+  ) {}
+
+  async getProducts(skip: number, take: number): Promise<Product[]> {
+    return this.productRepository.find({
+      skip: isNaN(skip) ? 0 : skip,
+      take: isNaN(take) ? 10 : take,
+    });
+  }
+
+  async getById(id: string) {
+    return await this.productRepository.findOne({ where: { id } });
+  }
+
+  async findByName(name: string) {
+    return await this.productRepository.findOne({ where: { name } });
+  }
+
+  
+  async updateProduct(id: string, updateProduct: Partial<Product>) {
+    await this.productRepository.update(id, updateProduct);
+    return this.getById(id);
+  }
+
+  async deleteProduct(id: string) {
+    const product = await this.getById(id);
+    if (product) {
+      await this.productRepository.remove(product);
+      return product;
     }
+    return null;
+  }
 
-    async getById(id: number) {
-        return this.products.find((product)=> product.id == id);
-    }
+  create(productData: Partial<Product>) {
+    return this.productRepository.create(productData);
+  }
 
-    createProduct(createProductDto: ProductDto) {
-        const newProduct = {
-          id: this.products.length + 1,
-          ...createProductDto
-        };
-        this.products.push(newProduct);
-        return newProduct;
-      }
-    
-      updateProduct(id: number, updateProductDto: ProductDto) {
-        const productIndex = this.products.findIndex(product => product.id === id);
-        if (productIndex > -1) {
-          this.products[productIndex] = { ...this.products[productIndex], ...updateProductDto };
-          return this.products[productIndex];
-        }
-        return null;
-      }
+  async createProduct(product: Product): Promise<Product> {
+    const newProduct = this.productRepository.create(product);
+    return await this.productRepository.save(newProduct);
+  }
 
-    async deleteProduct(id: number) {
-        const index = this.products.findIndex((product) => product.id === id);
-        if (index !== -1) {
-        const deletedProduct = this.products.splice(index, 1);
-        return deletedProduct[0];
-        }
-        return null;
-    }
-   
- }
+}

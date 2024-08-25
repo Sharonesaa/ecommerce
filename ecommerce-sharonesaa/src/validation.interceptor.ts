@@ -1,9 +1,8 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor, BadRequestException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { BadRequestException } from '@nestjs/common';
+import { Observable, from, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class ValidationInterceptor implements NestInterceptor {
@@ -11,24 +10,23 @@ export class ValidationInterceptor implements NestInterceptor {
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const obj = plainToClass(this.dto, request.body);
+    const obj = plainToInstance(this.dto, request.body);
 
-    return new Observable(observer => {
-      validate(obj).then(errors => {
+    return from(validate(obj)).pipe(
+      switchMap(errors => {
         if (errors.length > 0) {
-          observer.error(new BadRequestException('Validation failed'));
-        } else {
-          observer.next(next.handle());
-          observer.complete();
+          const errorMessages = errors.map(error => ({
+            property: error.property,
+            constraints: error.constraints,
+          }));
+          throw new BadRequestException({
+            message: 'Validation failed',
+            errors: errorMessages,
+          });
         }
-      }).catch(err => {
-        observer.error(new BadRequestException(err.message));
-      });
-    }).pipe(
-      catchError(err => {
-        return throwError(() => new BadRequestException(err.message));
-      })
+        return next.handle();
+      }),
+      catchError(err => throwError(() => new BadRequestException(err.message)))
     );
   }
 }
-

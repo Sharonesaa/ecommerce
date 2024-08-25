@@ -1,0 +1,20 @@
+ {
+      id: 1,
+      email: 'john@example.com',
+      name: 'John Doe',
+      password: 'J12345',
+      address: 'Argentina',
+      phone: 1159685241,
+      country: 'BA',
+      city: 'CABA'
+    },
+{
+      "name": "Sharon Lopez",
+      "email": "sharon@example.com",
+      "password": "slopez",
+      "phone": 1152634178,
+      "country": "BA",
+      "address": "Argentina",
+      "city": "CABA"
+    }
+  ];

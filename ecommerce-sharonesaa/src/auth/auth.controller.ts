@@ -1,31 +1,23 @@
-// auth.controller.ts
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { AuthService } from "./auth.service";
+import { Body, Controller, HttpCode, Post, Req } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { LoginUserDto } from './LoginUserDto';
+import { CreateUserDto } from '../users/CreateUser.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Get()
-    async getAuth() {
-        return this.authService.getAuth();
-    }
+  @Post('signup')
+  @HttpCode(200)
+  async createUser(@Body() user: CreateUserDto, @Req() request: Request & { now: string }) {
+    return this.authService.signUp(user);
+  }
 
-    @Post()
-    async createAuth(@Body() item: any) {
-        const authItem = await this.authService.createAuth(item);
-        return { id: authItem.id };
-    }
-
-    @Put(':id')
-    async updateAuth(@Param('id') id: string, @Body() item: any) {
-        const authItem = await this.authService.updateAuth(Number(id), item);
-        return { id: authItem.id };
-    }
-
-    @Delete(':id')
-    async deleteAuth(@Param('id') id: string) {
-        const deletedAuthItem = await this.authService.deleteAuth(Number(id));
-        return { id: deletedAuthItem.id };
-    }
+  @Post('signin')
+  @HttpCode(200)
+  async signIn(@Body() signInDto: LoginUserDto) {
+    return this.authService.signIn(signInDto.email, signInDto.password);
+  }
 }
