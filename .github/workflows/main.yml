@@ -26,7 +26,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: ./ecomerce-sharonesaa
-        file: ./ecomerce-sharonesaa/Dockerfile
+        context: ./ecommerce-sharonesaa
+        file: ./ecommerce-sharonesaa/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}ecommerce-sharonesaa:latests
