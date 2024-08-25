@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./ecommerce-sharonesaa
-        file: ./Dockerfile
+        file:  ./ecommerce-sharonesaa/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce-sharonesaa:latest
 
