@@ -37,12 +37,11 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Email or password incorrect');
     }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Email or password incorrect');
+    }
     try {
-      // Comparar la contraseña proporcionada con el hash almacenado
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        throw new UnauthorizedException('Email or password incorrect');
-      }
       const payload = { 
         username: user.email, 
         sub: user.id,

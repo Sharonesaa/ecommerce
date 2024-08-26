@@ -1,16 +1,16 @@
-import { Module } from '@nestjs/common';
+import { CategoriesModule } from '../categories/categories.module';
+import { ProductsRepository } from './products.repository';
+import { ProductsController } from './products.controller';
+import { ProductsService } from './products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products.entity';
-import { ProductsRepository } from './products.repository';
-import { ProductsService } from './products.service';
-import { CategoriesModule } from '../categories/categories.module';
-import { ProductsController } from './products.controller';
 import { JwtService } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product]), CategoriesModule],
   controllers:[ProductsController],
   providers: [ProductsService, ProductsRepository,JwtService],
-  exports: [ProductsService, ProductsRepository],  // Exporta el repositorio aquí
+  exports: [ProductsService, ProductsRepository], 
 })
 export class ProductsModule {}

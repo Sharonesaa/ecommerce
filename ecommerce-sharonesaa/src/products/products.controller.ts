@@ -1,10 +1,11 @@
-import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put } from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { ProductDto } from './product.dto'; 
-import { JwtAuthGuard } from '../guards/auth.guard'
-import { FindOneParams } from '../dto/FindOneParams';
-import { UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put,Delete } from '@nestjs/common';
 import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
+import { ProductsService } from './products.service';
+import { FindOneParams } from '../dto/FindOneParams';
+import { JwtAuthGuard } from '../guards/auth.guard'
+import { ProductDto } from './product.dto'; 
+import { UseGuards } from '@nestjs/common';
+
 
 @ApiTags('Products')
 @Controller('products')
@@ -12,6 +13,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
+  @HttpCode(200)
   getProducts(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 5,
@@ -20,8 +22,18 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @HttpCode(200)
   async getProduct(@Param() params: FindOneParams): Promise<ProductDto> {
     return this.productsService.getProduct(params.id);
+  }
+  
+  @Post()
+  @HttpCode(201)
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async createProduct(
+    @Body() createProductDto: ProductDto,
+  ) {
+    return this.productsService.createProduct(createProductDto);
   }
 
   @ApiBearerAuth()
@@ -30,14 +42,21 @@ export class ProductsController {
   @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async updateProduct(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
-    const product = await this.productsService.updateProduct(id, updateProductDto);
-    return { id: product.id };
+    const updatedProduct = await this.productsService.updateProduct(id, updateProductDto);
+    return {
+      status: 'OK',
+      msg: `Modified product ${updatedProduct.id}`,
+      product: updatedProduct, // Devuelve el producto actualizado, incluyendo la categoría
+    };
   }
-  
-  //ESTA RUTA SOLO FUNCIONA PARA PRECARGAR CATEGORIA PRODUCTOS AL INICIALIZAR BASE DE DATP
-  // @Post('seeder')
-  // async loadProducts() {
-  //   await this.productsService.loadProducts();
-  //   return { message: 'Products loaded successfully' };
-  // } 
+
+  @ApiBearerAuth()
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async deleteProduct(@Param('id') id: string) {
+    await this.productsService.deleteProduct(id);
+    return {'status':'OK','msg':`Product removed ${id}`}
+  }
 }
+

@@ -27,4 +27,12 @@ export class CategoriesRepository {
     return this.categoryRepository.create(categoryData);
   }
 
+  async getById(id: string): Promise<Category | null> {
+    return await this.findOne({ where: { id } });
+  }
+
+  async findByName(name: string): Promise<Category | null> {
+    return await this.findOne({ where: { name } });
+  }
+
 }

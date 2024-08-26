@@ -10,9 +10,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,          // Esta opción está bien, es un booleano.
-      forbidNonWhitelisted: true, // Esta opción también es un booleano.
-      transform: true,          // Aquí es donde el tipo booleano está permitido.
+      whitelist: true,          
+      forbidNonWhitelisted: true, 
+      transform: true,          
     }),
   )
   app.use(loggerGlobal);

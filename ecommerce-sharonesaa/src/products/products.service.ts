@@ -1,17 +1,14 @@
-import { Injectable, UploadedFile } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { CategoriesRepository } from '@/categories/categories.repository';
 import { ProductsRepository } from './products.repository';
 import { Product } from './products.entity';
-import { CategoriesService } from '../categories/categories.service';
-import { products } from '../seeds/preload.data';
-
-import { FileUploadService } from 'src/file-upload/file.upload.service';
+import { ProductDto } from './product.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly productsRepository: ProductsRepository,
-    private readonly categoriesService: CategoriesService,
-    
+    private readonly categoryRepository: CategoriesRepository,
   ) {}
 
   async getProducts(page: number, limit: number): Promise<Product[]> {
@@ -27,36 +24,52 @@ export class ProductsService {
     return product;
   }
 
-  async createProduct(createProduct: Product) {
-    const existingProduct = await this.productsRepository.findByName(createProduct.name);
+  async createProduct(createProductDto: ProductDto): Promise<Product> {
+    const { categoryId, ...productData } = createProductDto; 
   
-    if (existingProduct) {
-      throw new Error(`Product with name ${createProduct.name} already exists`);
+    if (!categoryId) {
+      throw new BadRequestException('Falta categoría: Se requiere un ID de categoría válido.');
     }
-    return await this.productsRepository.createProduct(createProduct);
-  }
+    const category = await this.categoryRepository.getById(categoryId);
 
-  async updateProduct(id: string, updateProduct: Partial<Product>) {
-    return await this.productsRepository.updateProduct(id, updateProduct);
+    if (!category) {
+      throw new NotFoundException(`Categoría con id ${categoryId} no encontrada`);
+    }
+  
+    const product: Product = {
+      ...productData, 
+      category: category, 
+      orderDetails: [], 
+    };
+    return await this.productsRepository.createProduct(product); 
   }
-
+  
+  async updateProduct(id: string, updateProductDto: ProductDto): Promise<Product> {
+    const { categoryId, ...updateData } = updateProductDto;
+  
+    let category = null;
+  
+    if (categoryId) {
+      category = await this.categoryRepository.getById(categoryId);
+      if (!category) {
+        throw new NotFoundException(`Category with id ${categoryId} not found`);
+      }
+    }
+  
+    const product = await this.productsRepository.getById(id);
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    }
+  
+    // Actualiza los datos del producto, incluyendo la categoría si es necesario
+    Object.assign(product, updateData);
+    product.category = category;
+  
+    return await this.productsRepository.createProduct(product);
+  }
+  
   async deleteProduct(id: string) {
     return await this.productsRepository.deleteProduct(id);
   }
-
-  // async loadProducts() {
-  //   for (const productData of products) {
-  //     const existingProduct = await this.productsRepository.findByName(productData.name);
-  //     if (!existingProduct) {
-  //       const categories = await this.categoriesService.getCategories();
-  //       const category = categories.find(cat => cat.id === productData.categoryId);
-  //         if (category) {
-  //           const product = this.productsRepository.create(productData);
-  //           product.category = category; 
-  //           await this.productsRepository.createProduct(product);
-  //         }
-  //       }
-  //     }
-    // }
     
-  }
+}
