@@ -1,8 +1,8 @@
 import { Controller, Post, UploadedFile, UseInterceptors, Param, UseGuards } from "@nestjs/common";
-import { FileUploadService } from "./file.upload.service";
-import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../guards/auth.guard';
 import { ApiTags, ApiConsumes, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileUploadService } from "./file.upload.service";
+import { JwtAuthGuard } from '../guards/auth.guard';
 
 @ApiTags('UploadImage')
 @Controller('uploadImage')
@@ -27,6 +27,7 @@ export class FileUploadController {
       },
     },
   })
+ 
   async uploadFile(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,

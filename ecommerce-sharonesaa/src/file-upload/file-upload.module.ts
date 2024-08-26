@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { FileUploadService } from './file.upload.service';
-import { FileUploadController } from './file-upload.controller';
 import { CloudinaryService } from '../service/cloudinary/cloudinary.service';
-import { ProductsModule } from '../products/products.module';  // Importa ProductsModule aquí
 import { CategoriesModule } from '../categories/categories.module';
+import { FileUploadController } from './file-upload.controller';
+import { ProductsModule } from '../products/products.module';  
+import { FileUploadService } from './file.upload.service';
 import { JwtService } from '@nestjs/jwt';
+import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [ProductsModule, CategoriesModule],  // Asegúrate de que ProductsModule esté importado
+  imports: [ProductsModule, CategoriesModule],
   controllers: [FileUploadController],
   providers: [FileUploadService, CloudinaryService, JwtService],
 })

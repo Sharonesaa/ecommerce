@@ -16,5 +16,14 @@
       "country": "BA",
       "address": "Argentina",
       "city": "CABA"
-    }
-  ];
+    },
+
+http://localhost:3000/products/b5a56946-1290-40a8-9e85-86f2385c52ab
+{
+  "name": "Prueba Post1",
+  "description": "Esto es una prueba de create product",
+  "price": 39.99,
+  "stock": 12,
+  "imgUrl": "mouse.jpg",
+  "categoryId":"08132ed1-783a-4638-bf7d-3429cf1b6fca"
+}

@@ -1,12 +1,12 @@
 // orders.controller.ts
 import { Controller, Post, Body, Get, Param, UsePipes, ValidationPipe,UseGuards} from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { Order } from './order.entity';
-import { User } from '../users/users.entity';
 import { FindOneParams, FindUserParams } from '../dto/FindOneParams';
-import { CreateOrderDto } from './CreateOrderDto';
-import { JwtAuthGuard } from '../guards/auth.guard';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../guards/auth.guard';
+import { CreateOrderDto } from './CreateOrderDto';
+import { OrdersService } from './orders.service';
+import { User } from '../users/users.entity';
+import { Order } from './order.entity';
 
 @ApiTags('Orders')
 @Controller('orders')

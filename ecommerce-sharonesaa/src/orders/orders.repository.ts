@@ -1,11 +1,10 @@
-// orders.repository.ts
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Order } from './order.entity';
-import { OrderDetail } from './order-detail.entity';
 import { Product } from '../products/products.entity';
+import { OrderDetail } from './order-detail.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/users.entity';
+import { Injectable } from '@nestjs/common';
+import { Order } from './order.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class OrdersRepository {
@@ -21,17 +20,14 @@ export class OrdersRepository {
   ) {}
 
   async addOrder(userId: string, productIds: string[]): Promise<Order> {
-    // Busca al usuario
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
     }
   
-    // Crea y guarda la orden
     const newOrder = this.orderRepository.create({ user });
     await this.orderRepository.save(newOrder);
-  
-    // Obtén los productos y actualiza el stock
+
     const products = await this.productRepository.findByIds(productIds);
 
     // Crea un solo detalle de orden

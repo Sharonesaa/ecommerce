@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { CloudinaryService } from '../service/cloudinary/cloudinary.service';
-import { UploadFileDto } from './dto/upload-file.dto';
 import { ProductsRepository } from '../products/products.repository';
+import { UploadFileDto } from './dto/upload-file.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class FileUploadService {
