@@ -1,15 +1,20 @@
-version: '3.8'
-
 services:
-  nestapp: 
-    image: lsharon1778/ecommerce-sharonesaa
-    ports:
-        - '3000:3000'
+  app:
+    build: ./
+    container_name: node_app
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
     env_file:
-        - .env.development
+      - .env.development
+    ports:
+      - '3000:3000'
     depends_on:
-        - db
- 
+      - db
+    networks:
+      - node_postgres_network
+
   db:
     image: postgres:15
     container_name: postgres_db
@@ -19,6 +24,12 @@ services:
       - '5430:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - node_postgres_network
 
 volumes:
   pgdata:
+
+networks:
+  node_postgres_network:
+    driver: bridge
