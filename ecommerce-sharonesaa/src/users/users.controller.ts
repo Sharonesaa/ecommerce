@@ -35,6 +35,7 @@ export class UsersController {
     return 'ruta protegida';
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
@@ -52,6 +53,7 @@ export class UsersController {
     return { id: user.id };
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   @UseGuards(JwtAuthGuard,RolesGuard)
   @HttpCode(200)
@@ -61,8 +63,9 @@ export class UsersController {
     return { id: user.id };
   }
   
+  @ApiBearerAuth()
   @Delete(':id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true }))
   async deleteUser(@Param() params: FindOneParams) {
