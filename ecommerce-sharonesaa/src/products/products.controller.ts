@@ -4,7 +4,7 @@ import { ProductDto } from './product.dto';
 import { JwtAuthGuard } from '../guards/auth.guard'
 import { FindOneParams } from '../dto/FindOneParams';
 import { UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Products')
 @Controller('products')
@@ -24,7 +24,7 @@ export class ProductsController {
     return this.productsService.getProduct(params.id);
   }
 
-  
+  @ApiBearerAuth()
   @Put(':id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)

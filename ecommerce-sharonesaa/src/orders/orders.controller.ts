@@ -6,20 +6,22 @@ import { User } from '../users/users.entity';
 import { FindOneParams, FindUserParams } from '../dto/FindOneParams';
 import { CreateOrderDto } from './CreateOrderDto';
 import { JwtAuthGuard } from '../guards/auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @ApiBearerAuth()  
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async addOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     const { userId, products } = createOrderDto;
     return this.ordersService.addOrder(userId, products);
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
