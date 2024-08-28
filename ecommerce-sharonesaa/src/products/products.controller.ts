@@ -1,46 +1,62 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseInterceptors } from "@nestjs/common";
-import { ProductsService } from "./products.service";
-import { ValidationInterceptor } from '../validation.interceptor';
-import { ProductDto } from '../Dto/product.dto';
+import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put,Delete } from '@nestjs/common';
+import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
+import { ProductsService } from './products.service';
+import { FindOneParams } from '../dto/FindOneParams';
+import { JwtAuthGuard } from '../guards/auth.guard'
+import { ProductDto } from './product.dto'; 
+import { UseGuards } from '@nestjs/common';
 
+
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
-  constructor(private productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) {}
 
   @Get()
   @HttpCode(200)
-  getProducts() {
-    return this.productsService.getProducts();
+  getProducts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 5,
+  ) {
+    return this.productsService.getProducts(page, limit);
   }
 
   @Get(':id')
   @HttpCode(200)
-  getProductById(@Param('id') id: string) {
-    return this.productsService.getById(Number(id));
+  async getProduct(@Param('id') id: string): Promise<ProductDto> {
+    return this.productsService.getProduct(id);
   }
-
+  
   @Post()
   @HttpCode(201)
-  @UseInterceptors(new ValidationInterceptor(ProductDto))
-  async createProduct(@Body() createProductDto: ProductDto) {
-    const product = await this.productsService.createProduct(createProductDto);
-    return { id: product.id };
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async createProduct(
+    @Body() createProductDto: ProductDto,
+  ) {
+    return this.productsService.createProduct(createProductDto);
   }
 
+  @ApiBearerAuth()
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(200)
-  @UseInterceptors(new ValidationInterceptor(ProductDto))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async updateProduct(@Param('id') id: string, @Body() updateProductDto: ProductDto) {
-    const product = await this.productsService.updateProduct(Number(id), updateProductDto);
-    return { id: product.id };
+    const updatedProduct = await this.productsService.updateProduct(id, updateProductDto);
+    return {
+      status: 'OK',
+      msg: `Modified product ${updatedProduct.id}`,
+      product: updatedProduct, // Devuelve el producto actualizado, incluyendo la categoría
+    };
   }
 
-
+  @ApiBearerAuth()
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   async deleteProduct(@Param('id') id: string) {
-    const product = await this.productsService.deleteProduct(Number(id));
-    return { id: product.id };
+    await this.productsService.deleteProduct(id);
+    return {'status':'OK','msg':`Product removed ${id}`}
   }
 }
 
