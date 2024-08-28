@@ -26,7 +26,11 @@ export class AuthService {
     try {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       const newUser = await this.usersService.createUser({ ...user, password: hashedPassword });
-      return { success: 'User created successfully',...newUser };
+      
+      // Eliminar la propiedad password del objeto newUser
+      const { password, ...userWithoutPassword } = newUser;
+  
+      return { success: 'User created successfully', ...userWithoutPassword };
     } catch (error) {
       throw new BadRequestException('Error hashing password');
     }

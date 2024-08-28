@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards,UsePipes,ParseIntPipe, DefaultValuePipe } from '@nestjs/common';
 import { ValidationInterceptor } from '../validation.interceptor';
 import { ValidationPipe, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { FindOneParams } from '../dto/FindOneParams'
+import { ApiBearerAuth, ApiTags,ApiQuery } from '@nestjs/swagger';
 import { Roles} from '../decorators/roles.decorator';
 import { JwtAuthGuard } from '../guards/auth.guard';
 import { RolesGuard } from '../guards/RolesGuard';
@@ -20,13 +19,16 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
+  @ApiQuery({ name: 'page', required: false, schema: { default: 1 } })
+  @ApiQuery({ name: 'limit', required: false, schema: { default: 5 } })
   getUsers(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number ,
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
   ) {
     return this.usersService.getUsers(page, limit);
   }
 
+  @ApiBearerAuth()
   @Get('admin')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard,RolesGuard)
@@ -39,10 +41,10 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true }))
-  findOne(@Param() params: FindOneParams) {
-    return this.usersService.getById(params.id);
+  async findOne(@Param('id') id: string) {
+    return this.usersService.getById(id);
   }
- 
+
   //Este post esta solo por asignación de la homework, en ralidad dla creación de usuario debe hacerse por auth/signUp
   @Post()
   @HttpCode(201)
@@ -60,7 +62,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async updateUser(@Param('id') id: string, @Body() updateUserDto: CreateUserDto) {
     const user = await this.usersService.updateUser(id, updateUserDto);
-    return { id: user.id };
+    return {'status':'OK','msg':`User removed with ${id}`};
   }
   
   @ApiBearerAuth()
@@ -68,8 +70,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async deleteUser(@Param() params: FindOneParams) {
-    await this.usersService.deleteUser(params.id);
-    return {'status':'OK','msg':`User removed ${params.id}`};
+  async deleteUser(@Param('id') id: string) {
+    await this.usersService.deleteUser(id);
+    return {'status':'OK','msg':`User removed ${id}`};
   }
 }

@@ -25,8 +25,8 @@ export class OrdersController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  async getOrder(@Param() params: FindOneParams): Promise<Order> {
-    return this.ordersService.getOrder(params.id);
+  async getOrder(@Param('id') id: string): Promise<Order> {
+    return this.ordersService.getOrder(id);
   }
 
   @Get('user/:userId')

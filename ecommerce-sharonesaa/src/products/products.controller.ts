@@ -23,8 +23,8 @@ export class ProductsController {
 
   @Get(':id')
   @HttpCode(200)
-  async getProduct(@Param() params: FindOneParams): Promise<ProductDto> {
-    return this.productsService.getProduct(params.id);
+  async getProduct(@Param('id') id: string): Promise<ProductDto> {
+    return this.productsService.getProduct(id);
   }
   
   @Post()
