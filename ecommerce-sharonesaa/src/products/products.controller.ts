@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put,Delete } from '@nestjs/common';
+import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put,Delete, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { ApiTags,ApiBearerAuth,ApiQuery } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../guards/auth.guard'
@@ -15,9 +15,9 @@ export class ProductsController {
   @HttpCode(200)
   @ApiQuery({ name: 'page', required: false, schema: { default: 1 } })
   @ApiQuery({ name: 'limit', required: false, schema: { default: 5 } })
-  getProducts(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
+  getUsers(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number ,
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
   ) {
     return this.productsService.getProducts(page, limit);
   }
