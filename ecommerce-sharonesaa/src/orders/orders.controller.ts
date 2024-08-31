@@ -1,6 +1,5 @@
 // orders.controller.ts
 import { Controller, Post, Body, Get, Param, UsePipes, ValidationPipe,UseGuards} from '@nestjs/common';
-import { FindOneParams, FindUserParams } from '../dto/FindOneParams';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../guards/auth.guard';
 import { CreateOrderDto } from './CreateOrderDto';
@@ -31,7 +30,7 @@ export class OrdersController {
 
   @Get('user/:userId')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async getUserWithOrders(@Param() params: FindUserParams): Promise<User> {
-    return this.ordersService.getUserWithOrders(params.userId);
+  async getUserWithOrders(@Param('id') id: string): Promise<User> {
+    return this.ordersService.getUserWithOrders(id);
   }
 }
