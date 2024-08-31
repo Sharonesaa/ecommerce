@@ -1,7 +1,6 @@
 import { Controller, Post, Body, Param, HttpCode, UsePipes, ValidationPipe,Get, Query, Put,Delete } from '@nestjs/common';
-import { ApiTags,ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags,ApiBearerAuth,ApiQuery } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
-import { FindOneParams } from '../dto/FindOneParams';
 import { JwtAuthGuard } from '../guards/auth.guard'
 import { ProductDto } from './product.dto'; 
 import { UseGuards } from '@nestjs/common';
@@ -14,6 +13,8 @@ export class ProductsController {
 
   @Get()
   @HttpCode(200)
+  @ApiQuery({ name: 'page', required: false, schema: { default: 1 } })
+  @ApiQuery({ name: 'limit', required: false, schema: { default: 5 } })
   getProducts(
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 5,
