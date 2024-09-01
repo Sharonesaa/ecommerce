@@ -24,6 +24,6 @@ export class CategoryDto {
   @IsArray()
   @ArrayMinSize(1)
   @IsUUID('all', { each: true })
-  categories: string[];
+  products: string[];
 
 }
