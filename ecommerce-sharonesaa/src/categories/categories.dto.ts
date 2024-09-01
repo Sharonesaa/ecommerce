@@ -22,8 +22,7 @@ export class CategoryDto {
     example: ['4a27d7d3-1a1d-4d7d-9e2e-7b7e6e0e9f3d', '4a27dfgd3-1a1d-4d7d-9e2e-7b7e6e0e9f3d'],
   })
   @IsArray()
-  @ArrayMinSize(1)
   @IsUUID('all', { each: true })
-  categories: string[];
+  products: string[];
 
 }

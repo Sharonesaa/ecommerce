@@ -25,13 +25,4 @@ export class CategoriesService {
   }
   
 
-  // async loadCategories() {
-  //   for (const categoryData of categories) {
-  //     const existingCategory = await this.categoriesRepository.findOne({ where: { name: categoryData.name } });
-  //     if (!existingCategory) {
-  //       const category = this.categoriesRepository.create(categoryData);
-  //       await this.categoriesRepository.addCategories(category);
-  //     }
-  //   }
-  // }
 }
