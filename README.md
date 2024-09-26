@@ -14,7 +14,7 @@ Este es un proyecto de e-commerce construido con **NestJS**, **Docker**, y despl
   ![Docker](https://aprenderbigdata.com/wp-content/uploads/docker-logo-1024x876.png)
 
 - **Render**: Plataforma de nube para desplegar aplicaciones web sin complicaciones.
-  ![Render](https://weblab.mit.edu/public/img/sponsors/render.png)
+  ![Render](https://miro.medium.com/v2/resize:fit:1400/0*5VOZGdG2EofcwMdG.png)
 
 - **Cloudinary**: Servicio para gestionar y optimizar imágenes y videos.
   ![Cloudinary](https://logo-download.com/wp-content/data/images/png/Cloudinary-logo.png)
