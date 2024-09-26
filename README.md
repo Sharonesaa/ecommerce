@@ -17,7 +17,7 @@ Este es un proyecto de e-commerce construido con **NestJS**, **Docker**, y despl
   ![Render](https://weblab.mit.edu/public/img/sponsors/render.png)
 
 - **Cloudinary**: Servicio para gestionar y optimizar imágenes y videos.
-  ![Cloudinary](https://seekvectorlogo.com/wp-content/uploads/2022/02/cloudinary-vector-logo-2022.png)
+  ![Cloudinary](https://flyclipart.com/thumb2/moving-from-self-hosted-image-service-to-cloudinary-165494.png)
 
 ## Instalación
 
