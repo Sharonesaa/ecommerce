@@ -3,7 +3,7 @@
 ## Descripción
 Este es un proyecto de e-commerce construido con **NestJS**, **Docker**, y desplegado en **Render**. Permite a los usuarios navegar, agregar productos al carrito y realizar compras. También incluye funcionalidades para la gestión de pedidos y administración de productos.
 
-![E-commerce]([https://via.placeholder.com/800x400?text=E-commerce+Project](https://www.esic.edu/sites/default/files/rethink/ba73d6a3-ecommerce.jpg))
+![E-commerce](https://www.esic.edu/sites/default/files/rethink/ba73d6a3-ecommerce.jpg)
 
 ## Tecnologías Utilizadas
 
