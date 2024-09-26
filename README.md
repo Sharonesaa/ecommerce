@@ -11,13 +11,13 @@ Este es un proyecto de e-commerce construido con **NestJS**, **Docker**, y despl
   ![NestJS](https://nestjs.com/img/logo.svg)
 
 - **Docker**: Plataforma para desarrollar, enviar y ejecutar aplicaciones en contenedores.
-  ![Docker](https://www.docker.com/sites/default/files/d8/2019-07/vertical-logo-monochromatic.svg)
+  ![Docker](https://aprenderbigdata.com/wp-content/uploads/docker-logo-1024x876.png)
 
 - **Render**: Plataforma de nube para desplegar aplicaciones web sin complicaciones.
-  ![Render](https://render.com/static/branding/logo.svg)
+  ![Render](https://weblab.mit.edu/public/img/sponsors/render.png)
 
 - **Cloudinary**: Servicio para gestionar y optimizar imágenes y videos.
-  ![Cloudinary](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1621510735/Cloudinary_Logo_Horizontal_2019_White_BG.svg)
+  ![Cloudinary](https://seekvectorlogo.com/wp-content/uploads/2022/02/cloudinary-vector-logo-2022.png)
 
 ## Instalación
 
